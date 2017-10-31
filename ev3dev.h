@@ -303,7 +303,7 @@ public:
 //~autogen special-sensor-declaration specialSensorTypes.touchSensor>currentClass
 
 // Touch Sensor
-class touch_sensor : public sensor
+class sensor : public sensor
 {
 public:
   touch_sensor(address_type address = INPUT_AUTO);

@@ -146,11 +146,42 @@ void Crain::example_code()
     set_escape(ev3dev::button::back.pressed());
     set_enter(ev3dev::button::enter.pressed());
     
+    /*
     while (1)
     {
-        float a =0 ;
+        float a = 0 ;
         a = ultra_q.distance_centimeters();
         std::cout << a << std::endl;
+    }
+    */
+    
+    a.reset();
+       
+    b.reset(); 
+    
+    while(abs(a.position()) != abs(a_get_position_sp()))
+    {
+        
+        while(abs(b.position()) != abs(b_get_position_sp()))
+        {
+            if(ultra_q.distance_centimeters() == 5)
+            {
+                a.set_speed_sp(get_speed());
+                a.set_position_sp(-1*a_get_position_sp());
+                a.run_to_abs_pos();
+                a.set_stop_action("hold");
+                a.stop();
+            }
+        
+            b.set_speed_sp(get_speed());
+            b.set_position_sp(-1*b_get_position_sp());
+            b.run_to_abs_pos();
+            b.set_stop_action("hold");
+            b.stop();
+        }
+
+    }
+    /*
     }
     
     b.reset();
@@ -187,7 +218,7 @@ void Crain::example_code()
         c.set_stop_action("hold");
         c.stop();
     }
-
+*/
     a.stop();
     b.stop();
 }
