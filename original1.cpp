@@ -135,106 +135,177 @@ public:
     
 public:
     void example_code();
-    void cail();
-    //여기에 새로운 function
+    void left_right(int sp);
+    void up_down(int sp);
+    //void open_close(int sp);
 };
 
 void Crain::example_code()
-{ //This function is for example, you should develop your own logics
-    set_down(ev3dev::button::down.pressed());
-    set_up(ev3dev::button::up.pressed());
-    set_right(ev3dev::button::right.pressed());
-    set_left(ev3dev::button::left.pressed());
-    set_escape(ev3dev::button::back.pressed());
-    set_enter(ev3dev::button::enter.pressed());
-    
-    
-    b.reset();
+{
+    Crain crain;
     a.reset();
+    b.reset();
     c.reset();
     
-
+    int count = 0;
+    int dist = 0;
     
-    while(abs(b.position()) < 350)
+    //"""FIRST SCAN"""
+    //"""stop when an object is detected"""
+    
+    while((abs(b.position()) < 350) && (count == 0))
     {
-        if(ultra_q.distance_centimeters() < 10)
+        dist++;
+        if((ultra_q.distance_centimeters() > 0) && (ultra_q.distance_centimeters() < 10))
         {
-            a.set_speed_sp(get_speed());
-            a.set_position_sp(-20);
-            a.run_to_abs_pos();
-            a.set_stop_action("hold");
-            a.stop();
-            std::cout<<"a"<<std::endl;  
-            
-            c.set_speed_sp(get_speed());
-            c.set_position_sp(20);
-            c.run_to_abs_pos();
-            c.set_stop_action("hold");
-            c.stop();
-            std::cout <<"j"<<std::endl;
+            count++;
         }
         else
         {
-            std::cout<<"b"<<std::endl;   
-            b.set_speed_sp(get_speed());
-            b.set_position_sp(350);
-            b.run_to_abs_pos();
-            b.set_stop_action("hold");
-            b.stop();
+            crain.left_right(dist);
         }
     }
-
-    std::cout<<"out from out"<<std::endl;
-
-
-    /*
-    }
     
-    b.reset();
+    //"""DOWN"""
+    crain.up_down(100);
     
-    while(abs(b.position()) != abs(b_get_position_sp()))
+    //"""GRAB(CLOSE)"""
+    //crain.open_close(50);
+    
+    //"""UP"""
+    crain.up_down(0);
+    
+    //"""MOVE TO FINISH"""
+    crain.left_right(350);
+    
+    //"""DOWN"""
+    crain.up_down(100);
+    
+    //"""RELEASE"""
+    //crain.open_close(0);
+    
+    //"""UP"""
+    crain.up_down(0);
+    
+    //"""SECOND SCAN"""
+    //"""stop when an object is detected"""
+    
+    dist = 0;
+    
+    while((abs(b.position()) > 0) && (count == 0))
     {
-        b.set_speed_sp(get_speed());
-        b.set_position_sp(-1*b_get_position_sp());
-        b.run_to_abs_pos();
-        b.set_stop_action("hold");
-        b.stop();
+        dist++;
+        if((ultra_q.distance_centimeters() > 0) && (ultra_q.distance_centimeters() < 10))
+        {
+            count++;
+        }
+        else
+        {
+            crain.left_right(350 - dist);
+        }
     }
     
-        
-    a.reset();
-        
-    while(abs(a.position()) != abs(a_get_position_sp()))
+    //"""DOWN"""
+    crain.up_down(100);
+    
+    //"""GRAB(CLOSE)"""
+    //crain.open_close(50);
+    
+    //"""UP"""
+    crain.up_down(0);
+    
+    //"""MOVE TO FINISH"""
+    crain.left_right(350);
+    
+    //"""DOWN"""
+    crain.up_down(100);
+    
+    //"""RELEASE"""
+    //crain.open(0);
+    
+    //"""UP"""
+    crain.up_down(0);
+    
+    //"""THIRD SCAN"""
+    //"""stop when an object is detected"""
+    
+    dist = 0;
+    
+    while((abs(b.position()) > 0) && (count == 0))
     {
-        a.set_speed_sp(get_speed());
-        a.set_position_sp(-1*a_get_position_sp());
-        a.run_to_abs_pos();
-        a.set_stop_action("hold");
-        a.stop();
+        dist++;
+        if((ultra_q.distance_centimeters() > 0) && (ultra_q.distance_centimeters() < 10))
+        {
+            count++;
+        }
+        else
+        {
+            crain.left_right(350 - dist);
+        }
     }
     
+    //"""DOWN"""
+    crain.up_down(100);
     
-    c.reset();
+    //"""GRAB(CLOSE)"""
+    //crain.open_close(50);
     
-    while(abs(c.position()) != abs(c_get_position_sp()))
-    {
-        c.set_speed_sp(get_speed());
-        c.set_position_sp(-1*c_get_position_sp());
-        c.run_to_abs_pos();
-        c.set_stop_action("hold");
-        c.stop();
-    }
-*/
+    //"""UP"""
+    crain.up_down(0);
+    
+    //"""MOVE TO FINISH"""
+    crain.left_right(350);
+    
+    //"""DOWN"""
+    crain.up_down(100);
+    
+    //"""RELEASE"""
+    //crain.open(0);
+
     a.stop();
     b.stop();
 }
 
-/*
-void Crain::cali()
+void Crain::left_right(int sp)
 {
-    // 여기에 cali function내용 넣음 
+    while(abs(c.position()) != abs(sp)) // 왼쪽이 0
+    {
+        b.set_speed_sp(get_speed());
+        b.set_position_sp(sp);// - left + right
+        b.run_to_abs_pos();
+        b.set_stop_action("hold");
+        b.stop();
+    }
+}
+
+
+void Crain::up_down(int sp)
+{
+    while( (abs(a.position()) >= (sp + 30)) || (abs(a.position()) <= (sp - 30)) ) //위에가 0
+    {
+        a.set_speed_sp(get_speed());
+        a.set_position_sp(sp);
+        a.run_to_abs_pos();
+        a.set_stop_action("hold");
+        a.stop();
+    }
+}
+
+
+/*
+void Crain::open_close(int sp)
+{
+    while( (abs(c.position()) <= (sp - 20))  || (abs(c.position()) >= (sp + 20)) )// 열린게 0
+    {
+        c.set_speed_sp(get_speed());
+        c.set_position_sp(sp);
+        c.run_to_abs_pos();
+        c.set_stop_action("hold");
+        c.stop();
+    }
 }
 */
+
 
 int main()
 {     
