@@ -79,7 +79,7 @@ public:
         return m_escape;
     }
 
-    virtual int  get_speed()
+    virtual int get_speed()
     {
         return 0.01;
     }
@@ -157,29 +157,57 @@ void Crain::example_code()
     }
     */
     
+    b.reset();
     a.reset();
-    b.reset(); 
-
-    while(abs(b.position()) != abs(b_get_position_sp()))
+    c.reset();
+    
+    int count = 0;
+    
+    int dist = 0;
+    
+    while((abs(b.position()) < 350) && (count == 0))
     {
-        if(ultra_q.distance_centimeters() <= 5)
+        dist++;
+        if((ultra_q.distance_centimeters() > 0) && (ultra_q.distance_centimeters() < 10))
         {
-            a.set_speed_sp(get_speed());
-            a.set_position_sp(-1*a_get_position_sp());
-            a.run_to_abs_pos();
-            a.set_stop_action("hold");                
-            a.stop();                }
+            count++;
         }
         else
         {
             b.set_speed_sp(get_speed());
-            b.set_position_sp(-1*1);
+            b.set_position_sp(-1*dist);
             b.run_to_abs_pos();
             b.set_stop_action("hold");
             b.stop();
         }
     }
     
+    while(abs(a.position()) != abs(a_get_position_sp()))
+    {
+        a.set_speed_sp(get_speed());
+        a.set_position_sp(-1 * a_get_position_sp());
+        a.run_to_abs_pos();
+        a.set_stop_action("hold");
+        a.stop();
+    }
+    
+    while(abs(c.position()) != abs(c_get_position_sp()))
+    {
+        c.set_speed_sp(get_speed());
+        c.set_position_sp(c_get_position_sp());
+        c.run_to_abs_pos();
+        c.set_stop_action("hold");
+        c.stop();
+    }
+    
+    while(abs(c.position()) != abs(c_get_position_sp()))
+    {
+        c.set_speed_sp(get_speed());
+        c.set_position_sp(-1 * c_get_position_sp());
+        c.run_to_abs_pos();
+        c.set_stop_action("hold");
+        c.stop();
+    }
     
     /*
     }
@@ -223,11 +251,12 @@ void Crain::example_code()
     b.stop();
 }
 
-
+/*
 void Crain::cali()
 {
     // 여기에 cali function내용 넣음 
 }
+*/
 
 int main()
 {     
