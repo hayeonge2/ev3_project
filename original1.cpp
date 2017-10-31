@@ -4,9 +4,7 @@
 class Crain : public CraneCrane
 {
 private:
-    //ultrasonic sensor declaration 
     ev3dev::ultrasonic_sensor ultra_q;
-    //touch sensor declaration
     ev3dev::touch_sensor touch_q;
     ev3dev::motor a;
     ev3dev::motor b; 
@@ -14,8 +12,7 @@ private:
     
 public:
     // Hardware Configuration
-    // when we want to use a sensor, need to say where it is connected --> here
-    Crain():m_speed(0), touch_q(ev3dev::INPUT_2), a(ev3dev::OUTPUT_B), b(ev3dev::OUTPUT_C), c(ev3dev::OUTPUT_A), ultra_q(ev3dev::INPUT_3)
+    Crain():m_speed(0), touch_q(ev3dev::INPUT_2), a(ev3dev::OUTPUT_B), b(ev3dev::OUTPUT_C), c(ev3dev::OUTPUT_D), ultra_q(ev3dev::INPUT_3)
     {
         
     }
@@ -30,12 +27,6 @@ public:
     return value(0);
     }
     */
-    
-    bool get_touch_pressed()
-    {
-        return touch_q.is_pressed();
-    }
-    
     /* for ultrasonic sensor activation
     // Measurement of the distance detected by the sensor,
     // in centimeters.
@@ -43,6 +34,12 @@ public:
     if (do_set_mode) set_mode(mode_us_dist_cm);
     return float_value(0);
     */
+    
+    
+    bool get_touch_pressed()
+    {
+        return touch_q.is_pressed();
+    }
     
     float get_ultrasonic_distance()
     {
@@ -81,7 +78,7 @@ public:
 
     virtual int get_speed()
     {
-        return 0.01;
+        return 100;
     }
     
     virtual int a_get_position_sp()
@@ -91,12 +88,12 @@ public:
     
     virtual int b_get_position_sp()
     {
-        return 350;
+        return 100;
     }
     
     virtual int c_get_position_sp()
     {
-        return 30;
+        return 50;
     }
     
     virtual void set_down(bool val)
@@ -135,14 +132,17 @@ public:
     
 public:
     void example_code();
+    
     void left_right(int sp);
     void up_down(int sp);
-    //void open_close(int sp);
+    void open_close(int sp);
 };
+
+
 
 void Crain::example_code()
 {
-    Crain crain;
+    
     a.reset();
     b.reset();
     c.reset();
@@ -153,7 +153,7 @@ void Crain::example_code()
     //"""FIRST SCAN"""
     //"""stop when an object is detected"""
     
-    while((abs(b.position()) < 350) && (count == 0))
+    while((abs(b.position()) < 450) && (count == 0))
     {
         dist++;
         if((ultra_q.distance_centimeters() > 0) && (ultra_q.distance_centimeters() < 10))
@@ -162,30 +162,30 @@ void Crain::example_code()
         }
         else
         {
-            crain.left_right(dist);
+            left_right(dist);
         }
     }
     
     //"""DOWN"""
-    crain.up_down(100);
+    up_down(350);
     
     //"""GRAB(CLOSE)"""
-    //crain.open_close(50);
+    open_close(50);
     
     //"""UP"""
-    crain.up_down(0);
+    up_down(0);
     
     //"""MOVE TO FINISH"""
-    crain.left_right(350);
+    left_right(450);
     
     //"""DOWN"""
-    crain.up_down(100);
+    up_down(350);
     
     //"""RELEASE"""
-    //crain.open_close(0);
+    open_close(0);
     
     //"""UP"""
-    crain.up_down(0);
+    up_down(0);
     
     //"""SECOND SCAN"""
     //"""stop when an object is detected"""
@@ -201,30 +201,30 @@ void Crain::example_code()
         }
         else
         {
-            crain.left_right(350 - dist);
+            left_right(450 - dist);
         }
     }
     
     //"""DOWN"""
-    crain.up_down(100);
+    up_down(350);
     
     //"""GRAB(CLOSE)"""
-    //crain.open_close(50);
+    open_close(50);
     
     //"""UP"""
-    crain.up_down(0);
+    up_down(0);
     
     //"""MOVE TO FINISH"""
-    crain.left_right(350);
+    left_right(450);
     
     //"""DOWN"""
-    crain.up_down(100);
+    up_down(350);
     
     //"""RELEASE"""
-    //crain.open(0);
+    open_close(0);
     
     //"""UP"""
-    crain.up_down(0);
+    up_down(0);
     
     //"""THIRD SCAN"""
     //"""stop when an object is detected"""
@@ -240,27 +240,27 @@ void Crain::example_code()
         }
         else
         {
-            crain.left_right(350 - dist);
+            left_right(450 - dist);
         }
     }
     
     //"""DOWN"""
-    crain.up_down(100);
+    up_down(350);
     
     //"""GRAB(CLOSE)"""
-    //crain.open_close(50);
+    open_close(50);
     
     //"""UP"""
-    crain.up_down(0);
+    up_down(0);
     
     //"""MOVE TO FINISH"""
-    crain.left_right(350);
+    left_right(450);
     
     //"""DOWN"""
-    crain.up_down(100);
+    up_down(350);
     
     //"""RELEASE"""
-    //crain.open(0);
+    open_close(0);
 
     a.stop();
     b.stop();
@@ -268,14 +268,12 @@ void Crain::example_code()
 
 void Crain::left_right(int sp)
 {
-    while(abs(c.position()) != abs(sp)) // 왼쪽이 0
-    {
-        b.set_speed_sp(get_speed());
-        b.set_position_sp(sp);// - left + right
-        b.run_to_abs_pos();
-        b.set_stop_action("hold");
-        b.stop();
-    }
+    std::cout << "dd" << std::endl;
+    b.set_speed_sp(get_speed());
+    b.set_position_sp(sp);// - left + right
+    b.run_to_abs_pos();
+    b.set_stop_action("hold");
+    b.stop();
 }
 
 
@@ -292,7 +290,6 @@ void Crain::up_down(int sp)
 }
 
 
-/*
 void Crain::open_close(int sp)
 {
     while( (abs(c.position()) <= (sp - 20))  || (abs(c.position()) >= (sp + 20)) )// 열린게 0
@@ -304,7 +301,6 @@ void Crain::open_close(int sp)
         c.stop();
     }
 }
-*/
 
 
 int main()
@@ -314,7 +310,6 @@ int main()
         
         
         if(crain.get_touch_pressed()==true){ 
-            
         crain.example_code(); //This line is for example, you should erase this ex_code in your 'real code' 
   
         }
