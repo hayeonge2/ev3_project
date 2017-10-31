@@ -91,7 +91,7 @@ public:
     
     virtual int b_get_position_sp()
     {
-        return 10;
+        return 350;
     }
     
     virtual int c_get_position_sp()
@@ -135,6 +135,8 @@ public:
     
 public:
     void example_code();
+    void cail();
+    //여기에 새로운 function
 };
 
 void Crain::example_code()
@@ -156,34 +158,28 @@ void Crain::example_code()
     */
     
     a.reset();
-       
     b.reset(); 
 
-    while(abs(b.position()) < 350)
+    while(abs(b.position()) != abs(b_get_position_sp()))
     {
-        while(abs(b.position()) != abs(b_get_position_sp()))
+        if(ultra_q.distance_centimeters() <= 5)
         {
-            
-            while(abs(a.position()) != abs(a_get_position_sp()))
-            {
-                if(ultra_q.distance_centimeters() == 5)
-                {
-                    a.set_speed_sp(get_speed());
-                    a.set_position_sp(-1*a_get_position_sp());
-                    a.run_to_abs_pos();
-                    a.set_stop_action("hold");
-                    a.stop();
-                }
-            
-                b.set_speed_sp(get_speed());
-                b.set_position_sp(-1*b_get_position_sp());
-                b.run_to_abs_pos();
-                b.set_stop_action("hold");
-                b.stop();
-            }
-    
+            a.set_speed_sp(get_speed());
+            a.set_position_sp(-1*a_get_position_sp());
+            a.run_to_abs_pos();
+            a.set_stop_action("hold");                
+            a.stop();                }
+        }
+        else
+        {
+            b.set_speed_sp(get_speed());
+            b.set_position_sp(-1*1);
+            b.run_to_abs_pos();
+            b.set_stop_action("hold");
+            b.stop();
         }
     }
+    
     
     /*
     }
@@ -225,6 +221,12 @@ void Crain::example_code()
 */
     a.stop();
     b.stop();
+}
+
+
+void Crain::cali()
+{
+    // 여기에 cali function내용 넣음 
 }
 
 int main()
