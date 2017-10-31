@@ -148,67 +148,45 @@ void Crain::example_code()
     set_escape(ev3dev::button::back.pressed());
     set_enter(ev3dev::button::enter.pressed());
     
-    /*
-    while (1)
-    {
-        float a = 0 ;
-        a = ultra_q.distance_centimeters();
-        std::cout << a << std::endl;
-    }
-    */
     
     b.reset();
     a.reset();
     c.reset();
     
-    int count = 0;
+
     
-    int dist = 0;
-    
-    while((abs(b.position()) < 350) && (count == 0))
+    while(abs(b.position()) < 350)
     {
-        dist++;
-        if((ultra_q.distance_centimeters() > 0) && (ultra_q.distance_centimeters() < 10))
+        if(ultra_q.distance_centimeters() < 10)
         {
-            count++;
+            a.set_speed_sp(get_speed());
+            a.set_position_sp(-20);
+            a.run_to_abs_pos();
+            a.set_stop_action("hold");
+            a.stop();
+            std::cout<<"a"<<std::endl;  
+            
+            c.set_speed_sp(get_speed());
+            c.set_position_sp(20);
+            c.run_to_abs_pos();
+            c.set_stop_action("hold");
+            c.stop();
+            std::cout <<"j"<<std::endl;
         }
         else
         {
+            std::cout<<"b"<<std::endl;   
             b.set_speed_sp(get_speed());
-            b.set_position_sp(-1*dist);
+            b.set_position_sp(350);
             b.run_to_abs_pos();
             b.set_stop_action("hold");
             b.stop();
         }
     }
-    
-    while(abs(a.position()) != abs(a_get_position_sp()))
-    {
-        a.set_speed_sp(get_speed());
-        a.set_position_sp(-1 * a_get_position_sp());
-        a.run_to_abs_pos();
-        a.set_stop_action("hold");
-        a.stop();
-    }
-    
-    while(abs(c.position()) != abs(c_get_position_sp()))
-    {
-        c.set_speed_sp(get_speed());
-        c.set_position_sp(c_get_position_sp());
-        c.run_to_abs_pos();
-        c.set_stop_action("hold");
-        c.stop();
-    }
-    
-    while(abs(c.position()) != abs(c_get_position_sp()))
-    {
-        c.set_speed_sp(get_speed());
-        c.set_position_sp(-1 * c_get_position_sp());
-        c.run_to_abs_pos();
-        c.set_stop_action("hold");
-        c.stop();
-    }
-    
+
+    std::cout<<"out from out"<<std::endl;
+
+
     /*
     }
     
