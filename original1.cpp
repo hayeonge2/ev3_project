@@ -4,6 +4,9 @@
 class Crain : public CraneCrane
 {
 private:
+    //ultrasonic sensor declaration 
+    ev3dev::ultrasonic_sensor ultra_q;
+    //touch sensor declaration
     ev3dev::touch_sensor touch_q;
     ev3dev::motor a;
     ev3dev::motor b; 
@@ -11,16 +14,39 @@ private:
     
 public:
     // Hardware Configuration
-    Crain():m_speed(0), touch_q(ev3dev::INPUT_2), a(ev3dev::OUTPUT_B), b(ev3dev::OUTPUT_C), c(ev3dev::OUTPUT_A)
+    // when we want to use a sensor, need to say where it is connected --> here
+    Crain():m_speed(0), touch_q(ev3dev::INPUT_2), a(ev3dev::OUTPUT_B), b(ev3dev::OUTPUT_C), c(ev3dev::OUTPUT_A), ultra_q(ev3dev::INPUT_3)
     {
         
     }
     
     int m_speed;
     
+    /* for touch sensor activation
+    // A boolean indicating whether the current touch sensor is being
+    // pressed.
+    bool is_pressed(bool do_set_mode = true) {
+    if (do_set_mode) set_mode(mode_touch);
+    return value(0);
+    }
+    */
+    
     bool get_touch_pressed()
     {
         return touch_q.is_pressed();
+    }
+    
+    /* for ultrasonic sensor activation
+    // Measurement of the distance detected by the sensor,
+    // in centimeters.
+    float distance_centimeters(bool do_set_mode = true) {
+    if (do_set_mode) set_mode(mode_us_dist_cm);
+    return float_value(0);
+    */
+    
+    float get_ultrasonic_distance()
+    {
+        return ultra_q.distance_centimeters();
     }
     
     virtual bool get_down()
@@ -70,7 +96,7 @@ public:
     
     virtual int c_get_position_sp()
     {
-        return 50;
+        return 30;
     }
     
     virtual void set_down(bool val)
@@ -120,13 +146,19 @@ void Crain::example_code()
     set_escape(ev3dev::button::back.pressed());
     set_enter(ev3dev::button::enter.pressed());
     
+    while (1)
+    {
+        float a =0 ;
+        a = ultra_q.distance_centimeters();
+        std::cout << a << std::endl;
+    }
     
     b.reset();
     
-    while(b.position()<b_get_position_sp())
+    while(abs(b.position()) != abs(b_get_position_sp()))
     {
         b.set_speed_sp(get_speed());
-        b.set_position_sp(b_get_position_sp());
+        b.set_position_sp(-1*b_get_position_sp());
         b.run_to_abs_pos();
         b.set_stop_action("hold");
         b.stop();
@@ -135,17 +167,19 @@ void Crain::example_code()
         
     a.reset();
         
-    while(a.position() != a_get_position_sp())
+    while(abs(a.position()) != abs(a_get_position_sp()))
     {
         a.set_speed_sp(get_speed());
-        a.set_position_sp(a_get_position_sp());
+        a.set_position_sp(-1*a_get_position_sp());
         a.run_to_abs_pos();
         a.set_stop_action("hold");
         a.stop();
     }
     
+    
     c.reset();
-    while(c.position() != c_get_position_sp())
+    
+    while(abs(c.position()) != abs(c_get_position_sp()))
     {
         c.set_speed_sp(get_speed());
         c.set_position_sp(-1*c_get_position_sp());
@@ -153,61 +187,6 @@ void Crain::example_code()
         c.set_stop_action("hold");
         c.stop();
     }
-        
-        
-        
-        
-        //b.reset();
-        //b.set_speed_sp(get_speed());
-        //b.set_position_sp(-50);
-        //b.run_to_abs_pos();
-        //b.stop();
-    
-        //a.set_speed_sp(-1*get_speed());
-        //a.run_forever();
-        
-        //b.set_position_sp(130);
-        //b.set_command("run-to-abs-pos");
-        
-        //b.set_stop_action("brake");
-        //b.set_command("stop");
-        
-        //b.run_to_abs_pos();
-        
-        //reset!!
-        
-        
-        /*
-        if(get_up())
-        {   
-                a.set_speed_sp(-1*get_speed());
-                a.run_forever();
-        }   
-        if(get_down())
-        {
-                a.set_speed_sp(get_speed());
-                a.run_forever();
-        }
-        if(get_left())
-        {
-               b.set_speed_sp(-1*get_speed());
-               b.run_forever();
-        }
-        if(get_right())
-        {
-               b.set_speed_sp(get_speed());
-               b.run_forever();
-        }
-       
-       
-        if(!(get_up() | get_down() | get_right() | get_left() | get_enter()))
-        {
-            a.set_speed_sp(0);
-            a.run_forever();
-            b.set_speed_sp(0);
-            b.run_forever();
-        }
-        */
 
     a.stop();
     b.stop();
