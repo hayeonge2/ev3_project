@@ -19,23 +19,6 @@ public:
     
     int m_speed;
     
-    /* for touch sensor activation
-    // A boolean indicating whether the current touch sensor is being
-    // pressed.
-    bool is_pressed(bool do_set_mode = true) {
-    if (do_set_mode) set_mode(mode_touch);
-    return value(0);
-    }
-    */
-    /* for ultrasonic sensor activation
-    // Measurement of the distance detected by the sensor,
-    // in centimeters.
-    float distance_centimeters(bool do_set_mode = true) {
-    if (do_set_mode) set_mode(mode_us_dist_cm);
-    return float_value(0);
-    */
-    
-    
     bool get_touch_pressed()
     {
         return touch_q.is_pressed();
@@ -78,7 +61,7 @@ public:
 
     virtual int get_speed()
     {
-        return 100;
+        return 50;
     }
     
     virtual int a_get_position_sp()
@@ -166,11 +149,14 @@ void Crain::example_code()
         }
     }
     
+    //"""OPEN"""
+    open_close(50);
+    
     //"""DOWN"""
     up_down(350);
     
-    //"""GRAB(CLOSE)"""
-    open_close(50);
+    //"""CLOSE"""
+    open_close(130);
     
     //"""UP"""
     up_down(0);
@@ -181,16 +167,20 @@ void Crain::example_code()
     //"""DOWN"""
     up_down(350);
     
-    //"""RELEASE"""
-    open_close(0);
+    //"""OPEN"""
+    open_close(50);
     
     //"""UP"""
     up_down(0);
+    
+    //"""CLOSE"""
+    open_close(0);
     
     //"""SECOND SCAN"""
     //"""stop when an object is detected"""
     
     dist = 0;
+    count = 0;
     
     while((abs(b.position()) > 0) && (count == 0))
     {
@@ -205,11 +195,14 @@ void Crain::example_code()
         }
     }
     
+    //"""OPEN"""
+    open_close(50);
+    
     //"""DOWN"""
     up_down(350);
     
     //"""GRAB(CLOSE)"""
-    open_close(50);
+    open_close(130);
     
     //"""UP"""
     up_down(0);
@@ -220,16 +213,20 @@ void Crain::example_code()
     //"""DOWN"""
     up_down(350);
     
-    //"""RELEASE"""
-    open_close(0);
+    //"""OPEN"""
+    open_close(50);
     
     //"""UP"""
     up_down(0);
+    
+    //"""GRAB(CLOSE)"""
+    open_close(0);
     
     //"""THIRD SCAN"""
     //"""stop when an object is detected"""
     
     dist = 0;
+    count =0;
     
     while((abs(b.position()) > 0) && (count == 0))
     {
@@ -244,11 +241,14 @@ void Crain::example_code()
         }
     }
     
+    //"""OPEN"""
+    open_close(50);
+    
     //"""DOWN"""
     up_down(350);
     
     //"""GRAB(CLOSE)"""
-    open_close(50);
+    open_close(130);
     
     //"""UP"""
     up_down(0);
@@ -259,8 +259,8 @@ void Crain::example_code()
     //"""DOWN"""
     up_down(350);
     
-    //"""RELEASE"""
-    open_close(0);
+    //"""OPEN"""
+    open_close(50);
 
     a.stop();
     b.stop();
@@ -268,7 +268,6 @@ void Crain::example_code()
 
 void Crain::left_right(int sp)
 {
-    std::cout << "dd" << std::endl;
     b.set_speed_sp(get_speed());
     b.set_position_sp(sp);// - left + right
     b.run_to_abs_pos();
@@ -292,10 +291,10 @@ void Crain::up_down(int sp)
 
 void Crain::open_close(int sp)
 {
-    while( (abs(c.position()) <= (sp - 20))  || (abs(c.position()) >= (sp + 20)) )// 열린게 0
+    while( (abs(c.position()) <= (sp - 5))  || (abs(c.position()) >= (sp + 5)) )// 닫힌게 0
     {
         c.set_speed_sp(get_speed());
-        c.set_position_sp(sp);
+        c.set_position_sp(-sp);
         c.run_to_abs_pos();
         c.set_stop_action("hold");
         c.stop();
