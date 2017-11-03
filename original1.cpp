@@ -342,13 +342,9 @@ int main()
         
         if(crain.get_touch_pressed()==true){
             
-            example* instance = new example;
-            example execute();
             
-            crain.BlackHand_code();
-            
-            delete example;
-            
+            crain.BlackHand_code(); //This line is for example, you should erase this ex_code in your 'real code' 
+  
         }
     }
 }
