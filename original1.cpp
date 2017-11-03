@@ -12,7 +12,7 @@ private:
     
 public:
     // Hardware Configuration
-    Crain():m_speed(0), touch_q(ev3dev::INPUT_2), a(ev3dev::OUTPUT_B), b(ev3dev::OUTPUT_C), c(ev3dev::OUTPUT_D), ultra_q(ev3dev::INPUT_3)
+    Crain():m_speed(0), touch_q(ev3dev::INPUT_2), a(ev3dev::OUTPUT_B), b(ev3dev::OUTPUT_C), c(ev3dev::OUTPUT_D), ultra_q(ev3dev::INPUT_1)
     {
         
     }
@@ -64,21 +64,6 @@ public:
         return 50;
     }
     
-    virtual int a_get_position_sp()
-    {
-        return 100;
-    }
-    
-    virtual int b_get_position_sp()
-    {
-        return 100;
-    }
-    
-    virtual int c_get_position_sp()
-    {
-        return 50;
-    }
-    
     virtual void set_down(bool val)
     {
         m_down = val;
@@ -114,16 +99,16 @@ public:
     }
     
 public:
-    void example_code();
-    
+    void BlackHand_code();
     void left_right(int sp);
+    void left_right_FINISH(int sp);
     void up_down(int sp);
     void open_close(int sp);
 };
 
 
 
-void Crain::example_code()
+void Crain::BlackHand_code()
 {
     
     a.reset();
@@ -131,15 +116,14 @@ void Crain::example_code()
     c.reset();
     
     int count = 0;
-    int dist = 0;
+    int dist = 5;
     
     //"""FIRST SCAN"""
     //"""stop when an object is detected"""
     
-    while((abs(b.position()) < 450) && (count == 0))
+    while((abs(b.position()) < 620) && (count == 0))
     {
-        dist++;
-        if((ultra_q.distance_centimeters() > 0) && (ultra_q.distance_centimeters() < 10))
+        if((ultra_q.distance_centimeters() < 12))
         {
             count++;
         }
@@ -149,72 +133,103 @@ void Crain::example_code()
         }
     }
     
+    sleep(0.5);
+    
     //"""OPEN"""
-    open_close(50);
+    open_close(55);
+    
+    sleep(0.5);
     
     //"""DOWN"""
-    up_down(350);
+    up_down(400);
     
-    //"""CLOSE"""
-    open_close(130);
+    sleep(1.5);
+    
+    //"""CLOSE"""///////////////////////////////////////////
+    //open_close(150);
+    c.set_speed_sp(100);
+    c.run_forever();
     
     //"""UP"""
     up_down(0);
     
     //"""MOVE TO FINISH"""
-    left_right(450);
+    left_right_FINISH(620);
+    
+    sleep(1);
     
     //"""DOWN"""
-    up_down(350);
+    up_down(400);
+    
+    sleep(0.5);
     
     //"""OPEN"""
-    open_close(50);
+    open_close(55);
+    
+    sleep(0.5);
     
     //"""UP"""
     up_down(0);
     
+    
     //"""CLOSE"""
     open_close(0);
+    
+    sleep(1);
     
     //"""SECOND SCAN"""
     //"""stop when an object is detected"""
     
     dist = 0;
     count = 0;
+    dist = 5;
     
     while((abs(b.position()) > 0) && (count == 0))
     {
-        dist++;
-        if((ultra_q.distance_centimeters() > 0) && (ultra_q.distance_centimeters() < 10))
+        if((ultra_q.distance_centimeters() < 10))
         {
             count++;
         }
         else
         {
-            left_right(450 - dist);
+            left_right((-1) * dist);
         }
     }
     
+    sleep(0.5);
+    
     //"""OPEN"""
-    open_close(50);
+    open_close(55);
+    
+    sleep(0.5);
     
     //"""DOWN"""
-    up_down(350);
+    up_down(400);
     
-    //"""GRAB(CLOSE)"""
-    open_close(130);
+    sleep(1.5);
+    
+    //"""GRAB(CLOSE)"""///////////////////////
+    //open_close(150);
+    c.set_speed_sp(100);
+    c.run_forever();
     
     //"""UP"""
     up_down(0);
     
     //"""MOVE TO FINISH"""
-    left_right(450);
+    left_right_FINISH(620);
+    
+    sleep(1);
     
     //"""DOWN"""
-    up_down(350);
+    up_down(400);
+    
+    sleep(0.5);
     
     //"""OPEN"""
-    open_close(50);
+    open_close(55);
+    
+    sleep(0.5);
     
     //"""UP"""
     up_down(0);
@@ -222,53 +237,70 @@ void Crain::example_code()
     //"""GRAB(CLOSE)"""
     open_close(0);
     
+    sleep(1);
+    
     //"""THIRD SCAN"""
     //"""stop when an object is detected"""
     
     dist = 0;
     count =0;
-    
+    dist = 5;
     while((abs(b.position()) > 0) && (count == 0))
     {
-        dist++;
-        if((ultra_q.distance_centimeters() > 0) && (ultra_q.distance_centimeters() < 10))
+        if((ultra_q.distance_centimeters() < 12))
         {
             count++;
         }
         else
         {
-            left_right(450 - dist);
+            left_right((-1) * dist);
         }
     }
     
     //"""OPEN"""
-    open_close(50);
+    open_close(55);
     
     //"""DOWN"""
-    up_down(350);
+    up_down(400);
     
-    //"""GRAB(CLOSE)"""
-    open_close(130);
+    sleep(1.5);
+    
+    //"""GRAB(CLOSE)"""////////////////////////////////////
+    //open_close(150);
+    c.set_speed_sp(100);
+    c.run_forever();
     
     //"""UP"""
     up_down(0);
     
     //"""MOVE TO FINISH"""
-    left_right(450);
+    left_right_FINISH(620);
+    
+    sleep(1);
     
     //"""DOWN"""
-    up_down(350);
+    up_down(400);
     
     //"""OPEN"""
-    open_close(50);
+    open_close(55);
 
     a.stop();
     b.stop();
 }
 
+
 void Crain::left_right(int sp)
 {
     b.set_speed_sp(get_speed());
+    b.set_position_sp(sp);// - left + right
+    b.run_to_rel_pos();
+    b.set_stop_action("hold");
+    b.stop();
+}
+
+void Crain::left_right_FINISH(int sp)
+{
+    b.set_speed_sp(20);
     b.set_position_sp(sp);// - left + right
     b.run_to_abs_pos();
     b.set_stop_action("hold");
@@ -280,7 +312,7 @@ void Crain::up_down(int sp)
 {
     while( (abs(a.position()) >= (sp + 30)) || (abs(a.position()) <= (sp - 30)) ) //위에가 0
     {
-        a.set_speed_sp(get_speed());
+        a.set_speed_sp(10);
         a.set_position_sp(sp);
         a.run_to_abs_pos();
         a.set_stop_action("hold");
@@ -308,9 +340,15 @@ int main()
     while(true){
         
         
-        if(crain.get_touch_pressed()==true){ 
-        crain.example_code(); //This line is for example, you should erase this ex_code in your 'real code' 
-  
+        if(crain.get_touch_pressed()==true){
+            
+            example* instance = new example;
+            example execute();
+            
+            crain.BlackHand_code();
+            
+            delete example;
+            
         }
     }
 }

@@ -69,7 +69,7 @@ constexpr char OUTPUT_A[] = "ttyAMA0:outA"; //!< Motor port A
 constexpr char OUTPUT_B[] = "ttyAMA0:outB"; //!< Motor port B
 constexpr char OUTPUT_C[] = "ttyAMA0:outC"; //!< Motor port C
 constexpr char OUTPUT_D[] = "ttyAMA0:outD"; //!< Motor port D
-#else//
+#else
 constexpr char INPUT_1[]  = "in1";  //!< Sensor port 1
 constexpr char INPUT_2[]  = "in2";  //!< Sensor port 2
 constexpr char INPUT_3[]  = "in3";  //!< Sensor port 3
@@ -79,19 +79,19 @@ constexpr char OUTPUT_A[] = "outA"; //!< Motor port A
 constexpr char OUTPUT_B[] = "outB"; //!< Motor port B
 constexpr char OUTPUT_C[] = "outC"; //!< Motor port C
 constexpr char OUTPUT_D[] = "outD"; //!< Motor port D
-#endif//이 부분 모두 사용
+#endif
 
 //-----------------------------------------------------------------------------
 
 // Generic device class.
-class device //이 부분 다 사용
+class device
 {
 public:
   bool connect(const std::string &dir,
                const std::string &pattern,
                const std::map<std::string, std::set<std::string>> &match) noexcept;
 
-  inline bool connected() const { return !_path.empty(); }//반환 값이 booling이고 connected가 됬는지 안됬는지 보여주는 기능
+  inline bool connected() const { return !_path.empty(); }
 
   int         device_index() const;
 
@@ -112,7 +112,7 @@ protected:
   std::string _path;
   mutable int _device_index = -1;
 };
-// 울트라 센서 : 초음파로 거리 측정(이것을 사용할 것을 권장), 컬러 센서 : 색 바뀌면
+
 //-----------------------------------------------------------------------------
 
 //~autogen generic-class-description classes.sensor>currentClass
@@ -133,7 +133,7 @@ protected:
 // program will still work.
 
 //~autogen
-class sensor : protected device 
+class sensor : protected device
 {
 public:
   typedef device_type sensor_type;
@@ -417,7 +417,6 @@ public:
   static constexpr char mode_us_dist_cm[] = "US-DIST-CM";
 
   // Continuous measurement in inches.
-  // 인치 단위의 연속 측정.
   static constexpr char mode_us_dist_in[] = "US-DIST-IN";
 
   // Listen.
@@ -427,7 +426,6 @@ public:
   static constexpr char mode_us_si_cm[] = "US-SI-CM";
 
   // Single measurement in inches.
-  // 인치 단위의 단일 측정.
   static constexpr char mode_us_si_in[] = "US-SI-IN";
 
 
@@ -440,7 +438,6 @@ public:
 
   // Measurement of the distance detected by the sensor,
   // in inches.
-  // 센서에 의해 감지 된 거리의 측정,
   float distance_inches(bool do_set_mode = true) {
     if (do_set_mode) set_mode(mode_us_dist_in);
     return float_value(0);
@@ -448,8 +445,6 @@ public:
 
   // Value indicating whether another ultrasonic sensor could
   // be heard nearby.
-  // 다른 초음파 센서가 가능한지 여부를 나타내는 값
-  // 근처에서 들립니다.
   bool other_sensor_present(bool do_set_mode = true) {
     if (do_set_mode) set_mode(mode_us_listen);
     return value(0);
@@ -649,13 +644,13 @@ public:
 
   // Run to an absolute position specified by `position_sp` and then
   // stop using the action specified in `stop_action`.
-  static constexpr char command_run_to_abs_pos[] = "run-to-abs-pos"; //지정해 준곳이 기준점
+  static constexpr char command_run_to_abs_pos[] = "run-to-abs-pos";
 
   // Run to a position relative to the current `position` value.
   // The new position will be current `position` + `position_sp`.
   // When the new position is reached, the motor will stop using
   // the action specified by `stop_action`.
-  static constexpr char command_run_to_rel_pos[] = "run-to-rel-pos"; // 내가 가는 곳이 기준점
+  static constexpr char command_run_to_rel_pos[] = "run-to-rel-pos";
 
   // Run the motor for the amount of time specified in `time_sp`
   // and then stop the motor using the action specified by `stop_action`.
@@ -664,7 +659,7 @@ public:
   // Run the motor at the duty cycle specified by `duty_cycle_sp`.
   // Unlike other run commands, changing `duty_cycle_sp` while running *will*
   // take effect immediately.
-  static constexpr char command_run_direct[] = "run-direct"; //사용할 필요 없음
+  static constexpr char command_run_direct[] = "run-direct";
 
   // Stop any of the run commands before they are complete using the
   // action specified by `stop_action`.
