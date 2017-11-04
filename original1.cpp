@@ -127,7 +127,7 @@ void Crain::BlackHand_code()
     //"""FIRST SCAN"""
     //"""stop when an object is detected"""
     
-    while((abs(b.position()) < 600) && (count == 0))
+    while((abs(b.position()) < 620) && (count == 0))
     {
         if((ultra_q.distance_centimeters() < 11))
         {
@@ -162,7 +162,7 @@ void Crain::BlackHand_code()
     up_down(0);
     
     //"""MOVE TO FINISH"""
-    left_right_FINISH(600);
+    left_right_FINISH(620);
     
     sleep(1);
     
@@ -223,7 +223,7 @@ void Crain::BlackHand_code()
     up_down(0);
     
     //"""MOVE TO FINISH"""
-    left_right_FINISH(600);
+    left_right_FINISH(620);
     
     sleep(1);
     
@@ -281,7 +281,7 @@ void Crain::BlackHand_code()
     up_down(0);
     
     //"""MOVE TO FINISH"""
-    left_right_FINISH(600);
+    left_right_FINISH(620);
     
     sleep(1);
     
@@ -343,15 +343,21 @@ void Crain::open_close(int sp)
 
 int main()
 {     
-    Crain crain;
+    //Crain crain;
+    Crain *BlackHand = new Crain;
+    
     while(true){
         
         
-        if(crain.get_touch_pressed()==true){
+       // if(crain.get_touch_pressed()==true){
+        if (BlackHand->get_touch_pressed()==true)
+        {
             
-            
-            crain.BlackHand_code(); //This line is for example, you should erase this ex_code in your 'real code' 
-  
+         //crain.BlackHand_code();
+         BlackHand->BlackHand_code();
+         delete BlackHand;
+         break;
+         
         }
     }
 }
